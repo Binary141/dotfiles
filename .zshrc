@@ -1,3 +1,4 @@
+source ~/.aliases
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -345,7 +346,7 @@ fi
 
 ## END OF FILE #################################################################
 #
-#
+#V
 
 yays(){
 	yay -S $@
@@ -356,3 +357,7 @@ source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 alias lg='lazygit'
+
+alias l='ls'
+alias ll='ls -la'
+alias vi='/usr/bin/vim'
