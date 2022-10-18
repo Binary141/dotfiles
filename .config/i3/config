@@ -46,7 +46,9 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec i3-sensible-terminal
+bindsym $mod+Return exec kitty
+#alacritty -o font.size=6
+#i3-sensible-terminal
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -187,12 +189,28 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        status_command i3status
+        status_command i3status -c ~/.config/i3status/i3status.conf
 }
+# Start rofi
 bindsym $mod+space exec rofi -combi-modi window#drun#ssh -theme solarized -font "hack 10" -show run
+
+# Use alt tab to switch between vertically split windows on a workspace
 bindsym $alt+Tab focus right
+
+# Screenshot like how windows does it, because that is what I am used to
 bindsym $alt+shift+s exec flameshot gui --clipboard
 
 # Cycle through active workspaces
 bindsym $mod+Tab workspace next
 bindsym $mod+Shift+Tab workspace prev
+
+# Have a background image on the desktop even though it will always be covered up :)
+exec --no-startup-id nitrogen --set-auto ~/.background.png
+
+# Make it so that the touchpad will recognize taps rather than needing to actually click it
+# The "12" is the id of the touchpad from the xinput command
+exec xinput set-prop "12" "libinput Tapping Enabled" 1
+
+# Restarts NetworkManager, but holds the window to allow the user to enter the sudo password and then waits
+# for the process to be closed by pressing enter before closing the window
+bindsym $alt+Shift+r exec "kitty --hold sudo systemctl restart NetworkManager"
