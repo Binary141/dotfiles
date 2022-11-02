@@ -200,6 +200,8 @@ bindsym $alt+Tab focus right
 # Screenshot like how windows does it, because that is what I am used to
 bindsym $alt+shift+s exec flameshot gui --clipboard
 
+# Screenshot using control alt shift s to save the screenshot as both a file and to the clipboard
+bindsym $alt+shift+control+s exec flameshot gui -c -p /home/binary/pictures
 # Cycle through active workspaces
 bindsym $mod+Tab workspace next
 bindsym $mod+Shift+Tab workspace prev
@@ -214,3 +216,9 @@ exec xinput set-prop "12" "libinput Tapping Enabled" 1
 # Restarts NetworkManager, but holds the window to allow the user to enter the sudo password and then waits
 # for the process to be closed by pressing enter before closing the window
 bindsym $alt+Shift+r exec "kitty --hold sudo systemctl restart NetworkManager"
+
+# Start libinput to detect custom gestures from ~/.config/libinput-gestures.conf
+exec --no-startup-id libinput-gestures-setup start
+
+
+# bindsym $mod+shift+l exec i3lock -c 000000
