@@ -12,6 +12,8 @@ Plug 'chrisbra/csv.vim'
 Plug 'rhysd/vim-grammarous'
 Plug 'morhetz/gruvbox'
 Plug 'sainnhe/everforest'
+Plug 'Yggdroot/indentLine'
+Plug 'kamykn/spelunker.vim'
 call plug#end()
 
 colorscheme everforest
@@ -56,6 +58,11 @@ autocmd BufNewFile,BufRead *.txt,*.tex,*.md setlocal spell spelllang=en_us " Set
 set nojoinspaces
 set clipboard=unnamed,unnamedplus   " Connect to clipboard
 set backspace=2                     " either the clipboard or the version of vim breaks backspace, this fixes it
+
+" Use Control + s to spell check a word
+nnoremap <silent> <C-S>         :norm Zl<CR>
+vnoremap <silent> <C-S>         <C-C>:norm Zl<CR>
+inoremap <silent> <C-S>         <C-O>:norm Zl<CR>
 
 " Searching
 set hlsearch
@@ -109,4 +116,5 @@ au BufRead,BufNewFile *.md set syntax=markdown
 autocmd BufEnter *.tf :setlocal filetype=yaml
 autocmd FileType yaml setlocal ts=2 sw=2 expandtab
 
+let g:indentLine_char = '|'
 
