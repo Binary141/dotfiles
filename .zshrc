@@ -1,4 +1,3 @@
-source ~/.aliases
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -6,358 +5,301 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# Filename:      /etc/skel/.zshrc
-# Purpose:       config file for zsh (z shell)
-# Authors:       (c) grml-team (grml.org)
-# Bug-Reports:   see http://grml.org/bugs/
-# License:       This file is licensed under the GPL v2 or any later version.
-################################################################################
-# Nowadays, grml's zsh setup lives in only *one* zshrc file.
-# That is the global one: /etc/zsh/zshrc (from grml-etc-core).
-# It is best to leave *this* file untouched and do personal changes to
-# your zsh setup via ${HOME}/.zshrc.local which is loaded at the end of
-# the global zshrc.
-#
-# That way, we enable people on other operating systems to use our
-# setup, too, just by copying our global zshrc to their ${HOME}/.zshrc.
-# Adjustments would still go to the .zshrc.local file.
-################################################################################
-
-## Inform users about upgrade path for grml's old zshrc layout, assuming that:
-## /etc/skel/.zshrc was installed as ~/.zshrc,
-## /etc/zsh/zshrc was installed as ~/.zshrc.global and
-## ~/.zshrc.local does not exist yet.
-if [ -r ~/.zshrc -a -r ~/.zshrc.global -a ! -r ~/.zshrc.local ] ; then
-    printf '-!-\n'
-    printf '-!- Looks like you are using the old zshrc layout of grml.\n'
-    printf '-!- Please read the notes in the grml-zsh-refcard, being'
-    printf '-!- available at: http://grml.org/zsh/\n'
-    printf '-!-\n'
-    printf '-!- If you just want to get rid of this warning message execute:\n'
-    printf '-!-        touch ~/.zshrc.local\n'
-    printf '-!-\n'
+## Path section
+# Set $PATH if ~/.local/bin exist
+if [ -d "$HOME/.local/bin" ]; then
+    export PATH=$HOME/.local/bin:$PATH
 fi
 
-## Settings for umask
-#if (( EUID == 0 )); then
-#    umask 002
-#else
-#    umask 022
-#fi
-
-## Now, we'll give a few examples of what you might want to use in your
-## .zshrc.local file (just copy'n'paste and uncomment it there):
-
-## Prompt theme extension ##
-
-# Virtualenv support
-
-#function virtual_env_prompt () {
-#    REPLY=${VIRTUAL_ENV+(${VIRTUAL_ENV:t}) }
-#}
-#grml_theme_add_token  virtual-env -f virtual_env_prompt '%F{magenta}' '%f'
-#zstyle ':prompt:grml:left:setup' items rc virtual-env change-root user at host path vcs percent
-
-## ZLE tweaks ##
-
-## use the vi navigation keys (hjkl) besides cursor keys in menu completion
-#bindkey -M menuselect 'h' vi-backward-char        # left
-#bindkey -M menuselect 'k' vi-up-line-or-history   # up
-#bindkey -M menuselect 'l' vi-forward-char         # right
-#bindkey -M menuselect 'j' vi-down-line-or-history # bottom
-
-## set command prediction from history, see 'man 1 zshcontrib'
-#is4 && zrcautoload predict-on && \
-#zle -N predict-on         && \
-#zle -N predict-off        && \
-#bindkey "^X^Z" predict-on && \
-#bindkey "^Z" predict-off
-
-## press ctrl-q to quote line:
-#mquote () {
-#      zle beginning-of-line
-#      zle forward-word
-#      # RBUFFER="'$RBUFFER'"
-#      RBUFFER=${(q)RBUFFER}
-#      zle end-of-line
-#}
-#zle -N mquote && bindkey '^q' mquote
-
-## define word separators (for stuff like backward-word, forward-word, backward-kill-word,..)
-#WORDCHARS='*?_-.[]~=/&;!#$%^(){}<>' # the default
-#WORDCHARS=.
-#WORDCHARS='*?_[]~=&;!#$%^(){}'
-#WORDCHARS='${WORDCHARS:s@/@}'
-
-# just type '...' to get '../..'
-#rationalise-dot() {
-#local MATCH
-#if [[ $LBUFFER =~ '(^|/| |	|'$'\n''|\||;|&)\.\.$' ]]; then
-#  LBUFFER+=/
-#  zle self-insert
-#  zle self-insert
-#else
-#  zle self-insert
-#fi
-#}
-#zle -N rationalise-dot
-#bindkey . rationalise-dot
-## without this, typing a . aborts incremental history search
-#bindkey -M isearch . self-insert
-
-#bindkey '\eq' push-line-or-edit
-
-## some popular options ##
-
-## add `|' to output redirections in the history
-#setopt histallowclobber
-
-## try to avoid the 'zsh: no matches found...'
-#setopt nonomatch
-
-## warning if file exists ('cat /dev/null > ~/.zshrc')
-#setopt NO_clobber
-
-## don't warn me about bg processes when exiting
-#setopt nocheckjobs
-
-## alert me if something failed
-#setopt printexitvalue
-
-## with spelling correction, assume dvorak kb
-#setopt dvorak
-
-## Allow comments even in interactive shells
-#setopt interactivecomments
-
-## if a new command line being added to the history list duplicates an older
-## one, the older command is removed from the list
-#is4 && setopt histignorealldups
-
-## compsys related snippets ##
-
-## changed completer settings
-#zstyle ':completion:*' completer _complete _correct _approximate
-#zstyle ':completion:*' expand prefix suffix
-
-## another different completer setting: expand shell aliases
-#zstyle ':completion:*' completer _expand_alias _complete _approximate
-
-## to have more convenient account completion, specify your logins:
-#my_accounts=(
-# {grml,grml1}@foo.invalid
-# grml-devel@bar.invalid
-#)
-#other_accounts=(
-# {fred,root}@foo.invalid
-# vera@bar.invalid
-#)
-#zstyle ':completion:*:my-accounts' users-hosts $my_accounts
-#zstyle ':completion:*:other-accounts' users-hosts $other_accounts
-
-## add grml.org to your list of hosts
-#hosts+=(grml.org)
-#zstyle ':completion:*:hosts' hosts $hosts
-
-## telnet on non-default ports? ...well:
-## specify specific port/service settings:
-#telnet_users_hosts_ports=(
-#  user1@host1:
-#  user2@host2:
-#  @mail-server:{smtp,pop3}
-#  @news-server:nntp
-#  @proxy-server:8000
-#)
-#zstyle ':completion:*:*:telnet:*' users-hosts-ports $telnet_users_hosts_ports
-
-## the default grml setup provides '..' as a completion. it does not provide
-## '.' though. If you want that too, use the following line:
-#zstyle ':completion:*' special-dirs true
-
-## aliases ##
-
-## translate
-#alias u='translate -i'
-
-## ignore ~/.ssh/known_hosts entries
-#alias insecssh='ssh -o "StrictHostKeyChecking=no" -o "UserKnownHostsFile=/dev/null" -o "PreferredAuthentications=keyboard-interactive"'
-
-
-## global aliases (for those who like them) ##
-
-#alias -g '...'='../..'
-#alias -g '....'='../../..'
-#alias -g BG='& exit'
-#alias -g C='|wc -l'
-#alias -g G='|grep'
-#alias -g H='|head'
-#alias -g Hl=' --help |& less -r'
-#alias -g K='|keep'
-#alias -g L='|less'
-#alias -g LL='|& less -r'
-#alias -g M='|most'
-#alias -g N='&>/dev/null'
-#alias -g R='| tr A-z N-za-m'
-#alias -g SL='| sort | less'
-#alias -g S='| sort'
-#alias -g T='|tail'
-#alias -g V='| vim -'
-
-## instead of global aliase it might be better to use grmls $abk assoc array, whose contents are expanded after pressing ,.
-#$abk[SnL]="| sort -n | less"
-
-## get top 10 shell commands:
-#alias top10='print -l ${(o)history%% *} | uniq -c | sort -nr | head -n 10'
-
-## Execute \kbd{./configure}
-#alias CO="./configure"
-
-## Execute \kbd{./configure --help}
-#alias CH="./configure --help"
-
-## miscellaneous code ##
-
-## Use a default width of 80 for manpages for more convenient reading
-#export MANWIDTH=${MANWIDTH:-80}
-
-## Set a search path for the cd builtin
-#cdpath=(.. ~)
-
-## variation of our manzsh() function; pick you poison:
-#manzsh()  { /usr/bin/man zshall |  most +/"$1" ; }
-
-## Switching shell safely and efficiently? http://www.zsh.org/mla/workers/2001/msg02410.html
-#bash() {
-#    NO_SWITCH="yes" command bash "$@"
-#}
-#restart () {
-#    exec $SHELL $SHELL_ARGS "$@"
-#}
-
-## Handy functions for use with the (e::) globbing qualifier (like nt)
-#contains() { grep -q "$*" $REPLY }
-#sameas() { diff -q "$*" $REPLY &>/dev/null }
-#ot () { [[ $REPLY -ot ${~1} ]] }
-
-## get_ic() - queries imap servers for capabilities; real simple. no imaps
-#ic_get() {
-#    emulate -L zsh
-#    local port
-#    if [[ ! -z $1 ]] ; then
-#        port=${2:-143}
-#        print "querying imap server on $1:${port}...\n";
-#        print "a1 capability\na2 logout\n" | nc $1 ${port}
-#    else
-#        print "usage:\n  $0 <imap-server> [port]"
-#    fi
-#}
-
-## List all occurrences of programm in current PATH
-#plap() {
-#    emulate -L zsh
-#    if [[ $# = 0 ]] ; then
-#        echo "Usage:    $0 program"
-#        echo "Example:  $0 zsh"
-#        echo "Lists all occurrences of program in the current PATH."
-#    else
-#        ls -l ${^path}/*$1*(*N)
-#    fi
-#}
-
-## Find out which libs define a symbol
-#lcheck() {
-#    if [[ -n "$1" ]] ; then
-#        nm -go /usr/lib/lib*.a 2>/dev/null | grep ":[[:xdigit:]]\{8\} . .*$1"
-#    else
-#        echo "Usage: lcheck <function>" >&2
-#    fi
-#}
-
-## Download a file and display it locally
-#uopen() {
-#    emulate -L zsh
-#    if ! [[ -n "$1" ]] ; then
-#        print "Usage: uopen \$URL/\$file">&2
-#        return 1
-#    else
-#        FILE=$1
-#        MIME=$(curl --head $FILE | \
-#               grep Content-Type | \
-#               cut -d ' ' -f 2 | \
-#               cut -d\; -f 1)
-#        MIME=${MIME%$'\r'}
-#        curl $FILE | see ${MIME}:-
-#    fi
-#}
-
-## Memory overview
-#memusage() {
-#    ps aux | awk '{if (NR > 1) print $5;
-#                   if (NR > 2) print "+"}
-#                   END { print "p" }' | dc
-#}
-
-## print hex value of a number
-#hex() {
-#    emulate -L zsh
-#    if [[ -n "$1" ]]; then
-#        printf "%x\n" $1
-#    else
-#        print 'Usage: hex <number-to-convert>'
-#        return 1
-#    fi
-#}
-
-## log out? set timeout in seconds...
-## ...and do not log out in some specific terminals:
-#if [[ "${TERM}" == ([Exa]term*|rxvt|dtterm|screen*) ]] ; then
-#    unset TMOUT
-#else
-#    TMOUT=1800
-#fi
-
-## associate types and extensions (be aware with perl scripts and anwanted behaviour!)
-#check_com zsh-mime-setup || { autoload zsh-mime-setup && zsh-mime-setup }
-#alias -s pl='perl -S'
-
-## ctrl-s will no longer freeze the terminal.
-#stty erase "^?"
-
-## you want to automatically use a bigger font on big terminals?
-#if [[ "$TERM" == "xterm" ]] && [[ "$LINES" -ge 50 ]] && [[ "$COLUMNS" -ge 100 ]] && [[ -z "$SSH_CONNECTION" ]] ; then
-#    large
-#fi
-
-## Some quick Perl-hacks aka /useful/ oneliner
-#bew() { perl -le 'print unpack "B*","'$1'"' }
-#web() { perl -le 'print pack "B*","'$1'"' }
-#hew() { perl -le 'print unpack "H*","'$1'"' }
-#weh() { perl -le 'print pack "H*","'$1'"' }
-#pversion()    { perl -M$1 -le "print $1->VERSION" } # i. e."pversion LWP -> 5.79"
-#getlinks ()   { perl -ne 'while ( m/"((www|ftp|http):\/\/.*?)"/gc ) { print $1, "\n"; }' $* }
-#gethrefs ()   { perl -ne 'while ( m/href="([^"]*)"/gc ) { print $1, "\n"; }' $* }
-#getanames ()  { perl -ne 'while ( m/a name="([^"]*)"/gc ) { print $1, "\n"; }' $* }
-#getforms ()   { perl -ne 'while ( m:(\</?(input|form|select|option).*?\>):gic ) { print $1, "\n"; }' $* }
-#getstrings () { perl -ne 'while ( m/"(.*?)"/gc ) { print $1, "\n"; }' $*}
-#getanchors () { perl -ne 'while ( m/«([^«»\n]+)»/gc ) { print $1, "\n"; }' $* }
-#showINC ()    { perl -e 'for (@INC) { printf "%d %s\n", $i++, $_ }' }
-#vimpm ()      { vim `perldoc -l $1 | sed -e 's/pod$/pm/'` }
-#vimhelp ()    { vim -c "help $1" -c on -c "au! VimEnter *" }
-
-## END OF FILE #################################################################
-#
-#V
-
-yays(){
-	yay -S $@
+eval "$(starship init zsh)"
+function set_win_title(){
+    echo -ne "\033]0; $USER@$HOST:${PWD/$HOME/~} \007"
 }
-source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+precmd_functions+=(set_win_title)
+
+
+## Plugins section: Enable fish style features
+# Use syntax highlighting
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# Use autosuggestion
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# Use history substring search
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+# Use fzf
+source /usr/share/fzf/key-bindings.zsh
+source /usr/share/fzf/completion.zsh
+
+# Arch Linux command-not-found support, you must have package pkgfile installed
+# https://wiki.archlinux.org/index.php/Pkgfile#.22Command_not_found.22_hook
+[[ -e /usr/share/doc/pkgfile/command-not-found.zsh ]] && source /usr/share/doc/pkgfile/command-not-found.zsh
+
+# Advanced command-not-found hook
+# [[ -e /usr/share/doc/find-the-command/ftc.zsh ]] && source /usr/share/doc/find-the-command/ftc.zsh
+#
+
+## Options section
+setopt correct                                                  # Auto correct mistakes
+setopt extendedglob                                             # Extended globbing. Allows using regular expressions with *
+setopt nocaseglob                                               # Case insensitive globbing
+setopt rcexpandparam                                            # Array expension with parameters
+setopt nocheckjobs                                              # Don't warn about running processes when exiting
+setopt numericglobsort                                          # Sort filenames numerically when it makes sense
+setopt nobeep                                                   # No beep
+setopt appendhistory                                            # Immediately append history instead of overwriting
+setopt histignorealldups                                        # If a new command is a duplicate, remove the older one
+setopt autocd                                                   # if only directory path is entered, cd there.
+setopt auto_pushd
+setopt pushd_ignore_dups
+setopt pushdminus
+
+# Completion.
+autoload -Uz compinit
+compinit
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'       # Case insensitive tab completion
+zstyle ':completion:*' rehash true                              # automatically find new executables in path
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"         # Colored completion (different colors for dirs/files/etc)
+zstyle ':completion:*' completer _expand _complete _ignored _approximate
+zstyle ':completion:*' menu select
+zstyle ':completion:*' select-prompt '%SScrolling active: current selection at %p%s'
+zstyle ':completion:*:descriptions' format '%U%F{cyan}%d%f%u'
+
+# Speed up completions
+zstyle ':completion:*' accept-exact '*(N)'
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.cache/zcache
+
+# automatically load bash completion functions
+autoload -U +X bashcompinit && bashcompinit
+
+HISTFILE=~/.zhistory
+HISTSIZE=50000
+SAVEHIST=10000
+
+
+## Keys
+# Use emacs key bindings
+bindkey -e
+
+# [PageUp] - Up a line of history
+if [[ -n "${terminfo[kpp]}" ]]; then
+  bindkey -M emacs "${terminfo[kpp]}" up-line-or-history
+  bindkey -M viins "${terminfo[kpp]}" up-line-or-history
+  bindkey -M vicmd "${terminfo[kpp]}" up-line-or-history
+fi
+# [PageDown] - Down a line of history
+if [[ -n "${terminfo[knp]}" ]]; then
+  bindkey -M emacs "${terminfo[knp]}" down-line-or-history
+  bindkey -M viins "${terminfo[knp]}" down-line-or-history
+  bindkey -M vicmd "${terminfo[knp]}" down-line-or-history
+fi
+
+# Start typing + [Up-Arrow] - fuzzy find history forward
+if [[ -n "${terminfo[kcuu1]}" ]]; then
+  autoload -U up-line-or-beginning-search
+  zle -N up-line-or-beginning-search
+
+  bindkey -M emacs "${terminfo[kcuu1]}" up-line-or-beginning-search
+  bindkey -M viins "${terminfo[kcuu1]}" up-line-or-beginning-search
+  bindkey -M vicmd "${terminfo[kcuu1]}" up-line-or-beginning-search
+fi
+# Start typing + [Down-Arrow] - fuzzy find history backward
+if [[ -n "${terminfo[kcud1]}" ]]; then
+  autoload -U down-line-or-beginning-search
+  zle -N down-line-or-beginning-search
+
+  bindkey -M emacs "${terminfo[kcud1]}" down-line-or-beginning-search
+  bindkey -M viins "${terminfo[kcud1]}" down-line-or-beginning-search
+  bindkey -M vicmd "${terminfo[kcud1]}" down-line-or-beginning-search
+fi
+
+# [Home] - Go to beginning of line
+if [[ -n "${terminfo[khome]}" ]]; then
+  bindkey -M emacs "${terminfo[khome]}" beginning-of-line
+  bindkey -M viins "${terminfo[khome]}" beginning-of-line
+  bindkey -M vicmd "${terminfo[khome]}" beginning-of-line
+fi
+# [End] - Go to end of line
+if [[ -n "${terminfo[kend]}" ]]; then
+  bindkey -M emacs "${terminfo[kend]}"  end-of-line
+  bindkey -M viins "${terminfo[kend]}"  end-of-line
+  bindkey -M vicmd "${terminfo[kend]}"  end-of-line
+fi
+
+# [Shift-Tab] - move through the completion menu backwards
+if [[ -n "${terminfo[kcbt]}" ]]; then
+  bindkey -M emacs "${terminfo[kcbt]}" reverse-menu-complete
+  bindkey -M viins "${terminfo[kcbt]}" reverse-menu-complete
+  bindkey -M vicmd "${terminfo[kcbt]}" reverse-menu-complete
+fi
+
+# [Backspace] - delete backward
+bindkey -M emacs '^?' backward-delete-char
+bindkey -M viins '^?' backward-delete-char
+bindkey -M vicmd '^?' backward-delete-char
+# [Delete] - delete forward
+if [[ -n "${terminfo[kdch1]}" ]]; then
+  bindkey -M emacs "${terminfo[kdch1]}" delete-char
+  bindkey -M viins "${terminfo[kdch1]}" delete-char
+  bindkey -M vicmd "${terminfo[kdch1]}" delete-char
+else
+  bindkey -M emacs "^[[3~" delete-char
+  bindkey -M viins "^[[3~" delete-char
+  bindkey -M vicmd "^[[3~" delete-char
+
+  bindkey -M emacs "^[3;5~" delete-char
+  bindkey -M viins "^[3;5~" delete-char
+  bindkey -M vicmd "^[3;5~" delete-char
+fi
+
+typeset -g -A key
+if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
+	autoload -Uz add-zle-hook-widget
+	function zle_application_mode_start { echoti smkx }
+	function zle_application_mode_stop { echoti rmkx }
+	add-zle-hook-widget -Uz zle-line-init zle_application_mode_start
+	add-zle-hook-widget -Uz zle-line-finish zle_application_mode_stop
+fi
+
+# Control Left - go back a word
+key[Control-Left]="${terminfo[kLFT5]}"
+if [[ -n "${key[Control-Left]}"  ]]; then
+	bindkey -M emacs "${key[Control-Left]}"  backward-word
+	bindkey -M viins "${key[Control-Left]}"  backward-word
+	bindkey -M vicmd "${key[Control-Left]}"  backward-word
+fi
+
+# Control Left - go forward a word
+key[Control-Right]="${terminfo[kRIT5]}"
+if [[ -n "${key[Control-Right]}" ]]; then
+	bindkey -M emacs "${key[Control-Right]}" forward-word
+	bindkey -M viins "${key[Control-Right]}" forward-word
+	bindkey -M vicmd "${key[Control-Right]}" forward-word
+fi
+
+# Alt Left - go back a word
+key[Alt-Left]="${terminfo[kLFT3]}"
+if [[ -n "${key[Alt-Left]}"  ]]; then
+	bindkey -M emacs "${key[Alt-Left]}"  backward-word
+	bindkey -M viins "${key[Alt-Left]}"  backward-word
+	bindkey -M vicmd "${key[Alt-Left]}"  backward-word
+fi
+
+# Control Right - go forward a word
+key[Alt-Right]="${terminfo[kRIT3]}"
+if [[ -n "${key[Alt-Right]}" ]]; then
+	bindkey -M emacs "${key[Alt-Right]}" forward-word
+	bindkey -M viins "${key[Alt-Right]}" forward-word
+	bindkey -M vicmd "${key[Alt-Right]}" forward-word
+fi
+
+## Useful aliases
+alias grubup="sudo update-grub"
+alias fixpacman="sudo rm /var/lib/pacman/db.lck"
+alias tarnow='tar -acf '
+alias untar='tar -zxvf '
+alias wget='wget -c '
+alias rmpkg="sudo pacman -Rdd"
+alias psmem='ps auxf | sort -nr -k 4'
+alias psmem10='ps auxf | sort -nr -k 4 | head -10'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+alias dir='dir --color=auto'
+alias vdir='vdir --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias hw='hwinfo --short'                                   # Hardware Info
+alias big="expac -H M '%m\t%n' | sort -h | nl"              # Sort installed packages according to size in MB (expac must be installed)
+alias gitpkg='pacman -Q | grep -i "\-git" | wc -l'			# List amount of -git packages
+
+# Get fastest mirrors
+alias mirror="sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist"
+alias mirrord="sudo reflector --latest 50 --number 20 --sort delay --save /etc/pacman.d/mirrorlist"
+alias mirrors="sudo reflector --latest 50 --number 20 --sort score --save /etc/pacman.d/mirrorlist"
+alias mirrora="sudo reflector --latest 50 --number 20 --sort age --save /etc/pacman.d/mirrorlist"
+
+# Help people new to Arch
+alias apt-get='man pacman'
+alias apt='man pacman'
+alias helpme='cht.sh --shell'
+alias pacdiff='sudo -H DIFFPROG=meld pacdiff'
+alias please='sudo'
+alias tb='nc termbin.com 9999'
+alias upd="/usr/bin/update"
+
+# Replace yay with paru if installed
+[ ! -x /usr/bin/yay ] && [ -x /usr/bin/paru ] && alias yay='paru'
+
+
+## Run neofetch
+neofetch
+
+### Added by Zinit's installer
+if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
+    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})â€¦%f"
+    command mkdir -p "$HOME/.local/share/zinit" && command chmod g-rwX "$HOME/.local/share/zinit"
+    command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git" && \
+        print -P "%F{33} %F{34}Installation successful.%f%b" || \
+        print -P "%F{160} The clone has failed.%f%b"
+fi
+
+source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+# Load a few important annexes, without Turbo
+# (this is currently required for annexes)
+zinit light-mode for \
+    zdharma-continuum/zinit-annex-as-monitor \
+    zdharma-continuum/zinit-annex-bin-gem-node \
+    zdharma-continuum/zinit-annex-patch-dl \
+    zdharma-continuum/zinit-annex-rust
+
+### End of Zinit's installer chunk
+zinit ice depth=1; zinit light romkatv/powerlevel10k
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+ #disable auto correct
+ unsetopt correct_all
+ unsetopt correct
 
-alias lg='lazygit'
+alias ls='/usr/bin/ls --color=auto'
+alias sl='/usr/bin/ls --color=auto'
+alias l='/usr/bin/ls --color=auto'
 
-alias l='ls'
-alias ll='ls -la'
-alias vi='/usr/bin/vim'
+export TERM="xterm-256color"
+# alias grade='git add . && git commit -m "WIP" && git push && /usr/local/bin/grind grade'
+
+function grade() {
+if [ -f ./.grind ]
+then
+  step=$(cat ./.grind | grep step | awk '{print $2}')
+  message=$(echo $(pwd) ${step})
+  git add . && git commit -m "${message}" && git push && grind grade
+else
+    echo "Not in a grind project folder"
+fi
+}
+alias lg="/usr/local/bin/lazygit"
+alias fgfg="fg"
+alias giit="git"
+alias yays="yay -S"
+
+# function unzip() {
+#     if [[ $# -ne 1 ]]
+#     then
+#         echo "Please pass in a single file"
+#         return
+#     fi
+#     FILE=$@
+#     echo "${FILE: -6}"
+#
+# }
+alias s='/usr/bin/ls'
