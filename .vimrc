@@ -10,11 +10,18 @@ Plug 'airblade/vim-gitgutter'
 Plug 'fatih/vim-go'
 Plug 'chrisbra/csv.vim'
 Plug 'rhysd/vim-grammarous'
-Plug 'morhetz/gruvbox'
+Plug 'luochen1990/rainbow'
+
+
 Plug 'sainnhe/everforest'
+Plug 'mhartington/oceanic-next'
+Plug 'joshdick/onedark.vim'
+
+Plug 'nanotech/jellybeans.vim'
 call plug#end()
 
-colorscheme everforest
+" colorscheme everforest
+colorscheme OceanicNext
 
 syntax on
 syntax enable
@@ -47,7 +54,8 @@ set splitbelow          " Split windows below current window
 set autoindent
 set encoding=utf-8 		" Necessary to show Unicode glyphs
 set expandtab           " Use spaces instead of tab
-set nowrap 				" Overflow scroll
+set wrap 				" Overflow scroll
+set linebreak
 set smartindent
 set tabstop=4
 set shiftwidth=4
@@ -109,4 +117,6 @@ au BufRead,BufNewFile *.md set syntax=markdown
 autocmd BufEnter *.tf :setlocal filetype=yaml
 autocmd FileType yaml setlocal ts=2 sw=2 expandtab
 
-
+" Disable Background Color Erase (BCE) so that color schemes
+" work properly when Vim is used inside tmux and GNU screen.
+set t_ut=
