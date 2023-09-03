@@ -292,14 +292,17 @@ alias fgfg="fg"
 alias giit="git"
 alias yays="yay -S"
 
-# function unzip() {
-#     if [[ $# -ne 1 ]]
-#     then
-#         echo "Please pass in a single file"
-#         return
-#     fi
-#     FILE=$@
-#     echo "${FILE: -6}"
-#
-# }
 alias s='/usr/bin/ls'
+
+alias activate='source env/bin/activate'
+
+function venvswitch() {
+    res=$(pip -V | grep $(pwd))
+    output=$?
+    if [ "${output}" -eq "0" ]
+    then
+        deactivate
+    else
+        source env/bin/activate
+    fi
+}
