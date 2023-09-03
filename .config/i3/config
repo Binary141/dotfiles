@@ -257,7 +257,6 @@ bar {
     #binding_mode      #2F343A #900000 #FFFFFF
     # colour of border, background, and text
     }
-
 }
 
 # Open specific applications in floating mode
@@ -394,7 +393,7 @@ bindsym $alt+Tab focus right
 bindsym $alt+shift+s exec flameshot gui --clipboard
 
 # Screenshot using control alt shift s to save the screenshot as both a file and to the clipboard
-bindsym $alt+shift+control+s exec flameshot gui -c -p /home/binary/pictures
+bindsym $alt+shift+control+s exec flameshot gui -c -p /home/binary/Pictures
 # Cycle through active workspaces
 bindsym $super+Tab workspace next
 bindsym $super+Shift+Tab workspace prev
@@ -408,3 +407,5 @@ workspace 2 output DP-2
 exec --no-startup-id xset s off -dpms
 
 exec_always --no-startup-id /home/binary/.screenlayout/default.sh
+
+for_window [title="pygame window"] floating enable, move position centerm resize 1280x768
