@@ -303,6 +303,11 @@ function venvswitch() {
     then
         deactivate
     else
-        source env/bin/activate
+        if [ -f ./env ]
+        then
+            source env/bin/activate
+        else
+            python3 -m venv ./env && source env/bin/activate
+        fi
     fi
 }
