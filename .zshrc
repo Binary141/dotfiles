@@ -289,6 +289,7 @@ fi
 }
 alias lg="/usr/local/bin/lazygit"
 alias fgfg="fg"
+alias fgg="fg"
 alias giit="git"
 alias yays="yay -S"
 
@@ -311,3 +312,24 @@ function venvswitch() {
         fi
     fi
 }
+print_gopher(){
+    cyan=`tput setaf 14`
+    beige=`tput setaf 215`
+    white=`tput setaf 15`
+    black=`tput setaf 0`
+    reset=`tput sgr0`
+    echo "${cyan}      ´.-::::::-.´"
+    echo "${cyan}  .:-::::::::::::::-:."
+    echo "${cyan}  ´_::${white}:    ::    :${cyan}::_´"
+    echo "${cyan}   .:${white}( ^   :: ^   )${cyan}:."
+    echo "${cyan}   ´::${white}:   ${beige}(${black}..${beige})${white}   :${cyan}::."
+    echo "${cyan}   ´:::::::${white}UU${cyan}:::::::´"
+    echo "${cyan}   .::::::::::::::::."
+    echo "${beige}   O${cyan}::::::::::::::::${beige}O"
+    echo "${cyan}   -::::::::::::::::-"
+    echo "${cyan}   ´::::::::::::::::´"
+    echo "${cyan}    .::::::::::::::."
+    echo "${beige}      oO${cyan}:::::::${beige}Oo"
+    echo "${reset}"
+}
+print_gopher
