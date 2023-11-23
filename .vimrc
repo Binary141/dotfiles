@@ -19,6 +19,7 @@ Plug 'joshdick/onedark.vim'
 Plug 'nanotech/jellybeans.vim'
 Plug 'Yggdroot/indentLine'
 Plug 'kamykn/spelunker.vim'
+Plug 'preservim/nerdtree'
 call plug#end()
 
 " colorscheme everforest
@@ -30,6 +31,7 @@ filetype plugin indent on
 
 " Airline
 let g:airline_powerline_fonts = 1
+let g:airline#extensions#branch#enabled = 0
 let g:airline_theme='dark'
 
 " Performance
@@ -127,3 +129,15 @@ autocmd FileType yaml setlocal ts=2 sw=2 expandtab
 " work properly when Vim is used inside tmux and GNU screen.
 set t_ut=
 let g:indentLine_char = '|'
+
+" Start NERDTree and leave the cursor in it.
+autocmd VimEnter * NERDTree | wincmd p
+
+" Start NERDTree when Vim is started without file arguments.
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists('s:std_in') | NERDTree | endif
+
+nnoremap <C-n> :NERDTree<CR>
+nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <C-f> :NERDTreeFind<CR>
+nnoremap <leader>n :NERDTreeFocus<CR>
