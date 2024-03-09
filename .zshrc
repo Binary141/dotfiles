@@ -287,7 +287,7 @@ else
     echo "Not in a grind project folder"
 fi
 }
-alias lg="/usr/local/bin/lazygit"
+alias lg="/usr/bin/lazygit"
 alias fgfg="fg"
 alias fgg="fg"
 alias giit="git"
@@ -333,3 +333,16 @@ print_gopher(){
     echo "${reset}"
 }
 print_gopher
+
+export PATH=$PATH:/usr/local/go/bin
+export PATH=$PATH:$HOME/go/bin/
+alias ld="/usr/bin/lazydocker"
+
+function search() {
+    echo $@
+    grep -Rn --no-messages --exclude=schema.json --binary-files=without-match "${@}" .
+}
+
+function vimsearch() {
+    vim $( grep -Rn --no-messages --exclude=schema.json --binary-files=without-match "${@}" . | awk 'NR>1' | awk '{print $1}' | cut -d ':' -f 1)
+}
