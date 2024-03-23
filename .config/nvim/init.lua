@@ -1,4 +1,4 @@
--- vim.cmd.colorscheme('habamax')
+vim.g.mapleader = " "
 
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 local uv = vim.uv or vim.loop
@@ -33,6 +33,10 @@ require('lazy').setup({
     branch = 'v3.x',
     lazy = true,
     config = false,
+  },
+  {
+    'nvim-telescope/telescope.nvim', tag = '0.1.6',
+      dependencies = { 'nvim-lua/plenary.nvim' }
   },
   {
     'neovim/nvim-lspconfig',
@@ -138,7 +142,7 @@ vim.opt.backup = false
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
 
-vim.opt.hlsearch = false
+vim.opt.hlsearch = true
 vim.opt.incsearch = true
 
 vim.opt.termguicolors = true
@@ -149,8 +153,6 @@ vim.opt.isfname:append("@-@")
 
 vim.opt.updatetime = 50
 
--- vim.opt.colorcolumn = "80"
-
 local Plug = vim.fn['plug#']
 
 vim.call('plug#begin')
@@ -159,15 +161,13 @@ Plug 'preservim/nerdtree'
 Plug 'fatih/vim-go'
 vim.call('plug#end')
 
-
--- vim.cmd('call plug#begin()')
--- vim.cmd('call plug#end')
 --
 require('gitblame').setup {
      --Note how the `gitblame_` prefix is omitted in `setup`
     enabled = true,
 }
 
+-- set options for nvim tree
 require("nvim-tree").setup({
   sort = {
     sorter = "case_sensitive",
@@ -179,10 +179,19 @@ require("nvim-tree").setup({
     group_empty = true,
   },
   filters = {
-    dotfiles = true,
+    dotfiles = false,
   },
 })
 
-vim.cmd('NvimTreeOpen')
+vim.keymap.set("n", "<leader>t", ":NvimTreeToggle<cr>")
+vim.keymap.set("n", "<leader>e", vim.cmd.Ex)
 
 
+-- telescope config
+local builtin = require('telescope.builtin')
+vim.keymap.set('n', '<leader>ff', builtin.find_files, {})
+vim.keymap.set('n', '<leader>fg', builtin.live_grep, {})
+vim.keymap.set('n', '<leader>fb', builtin.buffers, {})
+
+-- vim floaterm
+-- vim.keymap.set('n', '<leader>ft', ":FloatermToggle", {})
